@@ -25,7 +25,7 @@ A cli tool to quickly like the currently playing spotify track!!! (without havin
 ```
 
 ### Getting the binary
-1. Download the latest release that matches your operating system.
+1. Download the latest [release](https://github.com/lunar1um/lazyfav/tree/main/releases) that matches your operating system.
 2. Extract the downloaded archive.
 3. Move the extracted binary to a directory in your PATH.
 
