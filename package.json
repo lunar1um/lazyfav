@@ -1,0 +1,16 @@
+{
+  "name": "lazyfav",
+  "version": "1.0.0",
+  "description": "add a quick way to favourite the currently playing spotify track",
+  "type": "module",
+  "main": "index.mjs",
+  "dependencies": {
+    "env-paths": "^3.0.0",
+    "express": "^5.1.0",
+    "http": "^0.0.1-security",
+    "node-fetch": "^3.3.2",
+    "open": "^10.2.0",
+    "querystring": "^0.2.1",
+    "request": "^2.88.2"
+  }
+}
