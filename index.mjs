@@ -10,7 +10,6 @@ let client_id = "";
 let client_secret = "";
 
 const redirect_uri = "http://127.0.0.1:8888/callback";
-const tokenFile = "./spotify_tokens.json";
 
 function getAuthUrl() {
   const scope =
@@ -117,6 +116,9 @@ async function refreshAccessToken(refresh_token) {
 }
 
 async function loadTokens() {
+  const paths = envPaths("lazyfav", { suffix: "" });
+  const tokenFile = path.join(paths.data, "spotify_tokens.json");
+
   try {
     const raw = await fs.readFile(tokenFile, "utf8");
     return JSON.parse(raw);
@@ -126,6 +128,10 @@ async function loadTokens() {
 }
 
 async function saveTokens(tokens) {
+  const paths = envPaths("lazyfav", { suffix: "" });
+  const tokenFile = path.join(paths.data, "spotify_tokens.json");
+
+  await fs.mkdir(path.dirname(tokenFile), { recursive: true });
   await fs.writeFile(tokenFile, JSON.stringify(tokens, null, 2));
 }
 
@@ -139,6 +145,10 @@ async function getPlayingTrack(access_token) {
       },
     },
   );
+
+  if (response.status === 204) {
+    return null; // no track playing
+  }
 
   const data = await response.json();
 
@@ -189,7 +199,6 @@ async function readConfig() {
   try {
     await fs.access(configPath);
     const data = await fs.readFile(configPath, "utf8");
-
     return JSON.parse(data);
   } catch {
     return null;
@@ -202,6 +211,13 @@ async function main() {
 
   if (!conf) {
     console.log("No configuration file found.");
+    const paths = envPaths("lazyfav", { suffix: "" });
+    console.log(
+      `Create a config.json file at: ${path.join(paths.config, "config.json")}`,
+    );
+    console.log(
+      'With content like: {"client_id": "your_id", "client_secret": "your_secret"}',
+    );
     return;
   }
 
@@ -226,7 +242,6 @@ async function main() {
   }
 
   const track = await getPlayingTrack(tokens.access_token);
-  const isLiked = await checkIfLiked(tokens.access_token, track.item.id);
 
   if (!track || !track.item) {
     console.log("No track currently playing.");
@@ -239,6 +254,8 @@ async function main() {
     "by",
     track.item.artists.map((a) => a.name).join(", "),
   );
+
+  const isLiked = await checkIfLiked(tokens.access_token, track.item.id);
 
   if (isLiked[0] === true) {
     console.log("Playing track is already liked!");

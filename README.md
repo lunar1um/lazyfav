@@ -26,7 +26,8 @@ A cli tool to quickly like the currently playing spotify track!!! (without havin
 
 ### Getting the binary
 1. Download the latest release that matches your operating system.
-2. Move the binary to a directory in your PATH.
+2. Extract the downloaded archive.
+3. Move the extracted binary to a directory in your PATH.
 
 ### Authorize
 1. Run the binary
